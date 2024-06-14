@@ -1,0 +1,36 @@
+#leftPannel {
+    background-color: white;
+    width: 280px; 
+    height: 100vh;
+    display: flex;
+    position: absolute;
+}
+
+.notHidden {
+    left: 0;
+    transition-duration: 0.5s;
+}
+
+.hidden {
+    left: -280px;
+    transition-duration: 0.5s;
+}
+
+#onglets {
+    display: flex;
+    flex-direction: column;
+}
+
+#onglets h2 {
+    margin: 0;
+    padding: 5px 0 5px 20px;
+    border-top: solid grey 0.5px;
+}
+
+.artisteImg {
+    border-radius: 50%;
+}
+
+.artistes, .albums {
+    display: flex;
+}
