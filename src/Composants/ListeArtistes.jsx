@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import VueListe from './VueListe';
+import { Link } from 'react-router-dom';
 
 function ListeArtistes() {
 
     const [artistes, setArtistes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const artistesRef = useRef(null);
+    const boutonToutVoirRef = useRef(null);
 
     useEffect(() => {
         fetch('https://web24.mmi-stdie.fr/malo/wp-json/daubify/artistes')
@@ -32,6 +35,19 @@ function ListeArtistes() {
             });
     }, []);
 
+    useEffect(() => {
+        const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
+
+        if (currentUrl.includes('/liste-artistes')) {
+            if (artistesRef.current) {
+                artistesRef.current.classList.add('vueListeComplete');
+            }
+            if (boutonToutVoirRef.current) {
+                boutonToutVoirRef.current.classList.add('boutonToutVoir');
+            }
+        }
+    }, [artistes]);
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -57,8 +73,8 @@ function ListeArtistes() {
         <div className="sectionArtistes">
             <h1>{titreSection}</h1>
 
-            <div className='artistes'>
-                {artistesToShow.map((artiste, index) => (
+            <div ref={artistesRef} className='artistes'>
+                {artistesToShow.map((artiste, index) =>
                     <VueListe
                         groupeInfos="artiste"
                         idInfo={artiste.ID}
@@ -68,7 +84,11 @@ function ListeArtistes() {
                         altImage='yohoho'
                         mainInfo={artiste.post_title}
                     />
-                ))}
+                )}
+            </div>
+
+            <div id='boutonToutVoir' ref={boutonToutVoirRef}>
+                <button><Link to={'/liste-artistes'}>Tout voir</Link></button>
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ import React from "react"
 import { Link } from "react-router-dom"
 
 function VueListe({ groupeInfos, idInfo, linkToObject, classImg, imageUrl, altImage, mainInfo }) {
-    return console.log('rede'), (
+    return (
         <div>
             <Link to={'http://localhost:5173/'+linkToObject}>
             <li className={groupeInfos} key={idInfo}>

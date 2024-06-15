@@ -34,3 +34,11 @@
 .artistes, .albums {
     display: flex;
 }
+
+.boutonToutVoir {
+    display: none;
+}
+
+.vueListeComplete {
+    flex-wrap: wrap;
+}
