@@ -74,16 +74,18 @@ function ListeAlbums() {
             <h1>{titreSection}</h1>
 
             <div ref={albumsRef} id='albums' className='albums'>
-                {albumsToShow.map((album, index) => 
+                {albumsToShow.map((album, index) =>
                     <div key={album.ID}>
-                        <VueListe
-                            groupeInfos="album"
-                            idInfo={album.ID}
-                            linkToObject={`album/${album.ID}`}
-                            imageUrl={albums[index].acf.jaquette_de_lalbum.sizes.thumbnail}
-                            altImage='yohoho'
-                            mainInfo={album.post_title}
-                        />
+                        <Link to={`/album/${album.ID}`}>
+                            <VueListe
+                                groupeInfos="album"
+                                idInfo={album.ID}
+                                linkToObject={`album/${album.ID}`}
+                                imageUrl={albums[index].acf.jaquette_de_lalbum.sizes.thumbnail}
+                                altImage='yohoho'
+                                mainInfo={album.post_title}
+                            />
+                        </Link>
                         <h4 className="nomArtiste">{albums[index].acf.artiste_principal[0].post_title}</h4>
                     </div>
                 )}

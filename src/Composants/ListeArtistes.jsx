@@ -75,15 +75,19 @@ function ListeArtistes() {
 
             <div ref={artistesRef} className='artistes'>
                 {artistesToShow.map((artiste, index) =>
-                    <VueListe
-                        groupeInfos="artiste"
-                        idInfo={artiste.ID}
-                        linkToObject={`artiste/${artiste.ID}`}
-                        classImg="artisteImg"
-                        imageUrl={artistes[index].acf.photo_de_lartiste.sizes.thumbnail}
-                        altImage='yohoho'
-                        mainInfo={artiste.post_title}
-                    />
+                    <div key={artiste.ID}>
+                        <Link to={`/artiste/${artiste.ID}`}>
+                            <VueListe
+                                groupeInfos="artiste"
+                                idInfo={artiste.ID}
+                                linkToObject={`artiste/${artiste.ID}`}
+                                classImg="artisteImg"
+                                imageUrl={artistes[index].acf.photo_de_lartiste.sizes.thumbnail}
+                                altImage='yohoho'
+                                mainInfo={artiste.post_title}
+                            />
+                        </Link>
+                    </div>
                 )}
             </div>
 
