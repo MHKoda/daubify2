@@ -2,12 +2,15 @@ import React, { useState, useEffect, useRef } from 'react';
 import VueListe from './VueListe';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
+import FiltreGenresTeintes from './FiltreGenresTeintes';
 
 function ListeAlbums() {
     const [albums, setAlbums] = useState([]);
     const [filteredAlbums, setFilteredAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedGenre, setSelectedGenre] = useState("");
+    const [selectedTeinte, setSelectedTeinte] = useState("");
     const albumsRef = useRef(null);
     const boutonToutVoirRef = useRef(null);
 
@@ -21,7 +24,6 @@ function ListeAlbums() {
             })
             .then((data) => {
                 // Trier les données par post_title
-                console.log(data)
                 const sortedData = data.sort((a, b) => {
                     if (a.post_title.toLowerCase() < b.post_title.toLowerCase()) return -1;
                     if (a.post_title.toLowerCase() > b.post_title.toLowerCase()) return 1;
@@ -52,6 +54,24 @@ function ListeAlbums() {
         }
     }, [albums]);
 
+    useEffect(() => {
+        if (selectedGenre) {
+            const filtered = albums.filter(album => album.genres && album.genres.some(genre => genre.name === selectedGenre));
+            setFilteredAlbums(filtered);
+        } else {
+            setFilteredAlbums(albums);
+        }
+    }, [selectedGenre, albums]);
+
+    useEffect(() => {
+        if (selectedTeinte) {
+            const filtered = albums.filter(album => album.teintes && album.teintes.some(teinte => teinte.name === selectedTeinte));
+            setFilteredAlbums(filtered);
+        } else {
+            setFilteredAlbums(albums);
+        }
+    }, [selectedTeinte, albums]);
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -59,6 +79,9 @@ function ListeAlbums() {
     if (error) {
         return <p>Error: {error}</p>;
     }
+
+    const genres = [...new Set(albums.flatMap(album => album.genres?.map(genre => genre.name) || []).filter(Boolean))];
+    const teintes = [...new Set(albums.flatMap(album => album.teintes?.map(teinte => teinte.name) || []).filter(Boolean))];
 
     const currentUrl = typeof window !== 'undefined' ? window.location.href : '';
 
@@ -75,13 +98,22 @@ function ListeAlbums() {
 
     return (
         <div className='sectionAlbums'>
-            <SearchBar 
-                list={albums} 
-                setList={setFilteredAlbums} 
+            <SearchBar
+                list={albums}
+                setList={setFilteredAlbums}
                 filterField={album => album.post_title || ""} // S'assurer que filterField retourne une chaîne
                 placeholder='album'
             />
-            
+            <FiltreGenresTeintes
+                genres={genres}
+                selectedGenre={selectedGenre}
+                onGenreChange={setSelectedGenre}
+                
+                teintes={teintes}
+                selectedTeinte={selectedTeinte}
+                onTeinteChange={setSelectedTeinte}
+            />
+
             <h1>{titreSection}</h1>
 
             <div ref={albumsRef} id='albums' className='albums'>
