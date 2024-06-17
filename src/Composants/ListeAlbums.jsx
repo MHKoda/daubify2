@@ -81,6 +81,7 @@ function ListeAlbums() {
                 filterField={album => album.post_title || ""} // S'assurer que filterField retourne une chaîne
                 placeholder='album'
             />
+            
             <h1>{titreSection}</h1>
 
             <div ref={albumsRef} id='albums' className='albums'>

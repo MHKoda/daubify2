@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react'
 import VueListe from './VueListe';
 import { Link } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 function ListeArtistes() {
 
     const [artistes, setArtistes] = useState([]);
+    const [filteredArtistes, setFilteredArtistes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const artistesRef = useRef(null);
@@ -26,6 +28,7 @@ function ListeArtistes() {
                 });
 
                 setArtistes(sortedData);
+                setFilteredArtistes(sortedData);
                 setLoading(false);
             })
             .catch((err) => {
@@ -62,15 +65,22 @@ function ListeArtistes() {
     let titreSection;
 
     if (currentUrl.includes('/liste-artistes')) {
-        artistesToShow = artistes
+        artistesToShow = filteredArtistes
         titreSection = "Tous les artistes"
     } else {
-        artistesToShow = artistes.slice(0, 3) // Comportement par défaut
+        artistesToShow = filteredArtistes.slice(0, 3) // Comportement par défaut
         titreSection = "Artistes en vogue"
     }
 
     return (
         <div className="sectionArtistes">
+            <SearchBar
+                list={artistes}
+                setList={setFilteredArtistes}
+                filterField={artiste => artiste.post_title || ""} // S'assurer que filterField retourne une chaîne
+                placeholder='artiste'
+            />
+
             <h1>{titreSection}</h1>
 
             <div ref={artistesRef} className='artistes'>
@@ -82,9 +92,9 @@ function ListeArtistes() {
                                 idInfo={artiste.ID}
                                 linkToObject={`artiste/${artiste.ID}`}
                                 classImg="artisteImg"
-                                imageUrl={artistes[index].acf.photo_de_lartiste.sizes.thumbnail}
+                                imageUrl={artiste?.acf?.photo_de_lartiste?.sizes?.thumbnail || 'default_image_url'}
                                 altImage='yohoho'
-                                mainInfo={artiste.post_title}
+                                mainInfo={artiste?.post_title}
                             />
                         </Link>
                     </div>
