@@ -19,6 +19,7 @@ function SingleArtiste() {
         const artisteData = data.find(artiste => artiste.ID === parseInt(id));
         if (artisteData) {
           setArtiste(artisteData);
+          console.log(artisteData);
         } else {
           setError('Artiste not found');
         }
@@ -41,9 +42,9 @@ function SingleArtiste() {
 
   return (
     <div>
+      <img src={artiste.acf.photo_de_lartiste.sizes.thumbnail} alt={`Photo de(s) `+ artiste.post_title} />
       <h1>{artiste.post_title}</h1>
-      <img src={artiste.acf.photo_de_lartiste.sizes.thumbnail} alt={artiste.post_title} />
-      <p>{artiste.acf.description}</p>
+      <p>{artiste.acf.biographie}</p>
     </div>
   );
 }

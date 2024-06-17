@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import VueListe from './VueListe';
 import { Link } from 'react-router-dom';
+import SearchBar from './SearchBar';
 
 function ListeAlbums() {
     const [albums, setAlbums] = useState([]);
+    const [filteredAlbums, setFilteredAlbums] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const albumsRef = useRef(null);
@@ -19,6 +21,7 @@ function ListeAlbums() {
             })
             .then((data) => {
                 // Trier les données par post_title
+                console.log(data)
                 const sortedData = data.sort((a, b) => {
                     if (a.post_title.toLowerCase() < b.post_title.toLowerCase()) return -1;
                     if (a.post_title.toLowerCase() > b.post_title.toLowerCase()) return 1;
@@ -26,6 +29,7 @@ function ListeAlbums() {
                 });
 
                 setAlbums(sortedData);
+                setFilteredAlbums(sortedData);
                 setLoading(false);
             })
             .catch((err) => {
@@ -62,15 +66,21 @@ function ListeAlbums() {
     let titreSection;
 
     if (currentUrl.includes('/liste-albums')) {
-        albumsToShow = albums;
+        albumsToShow = filteredAlbums;
         titreSection = "Tous les Albums"
     } else {
-        albumsToShow = albums.slice(0, 3); // Comportement par défaut
+        albumsToShow = filteredAlbums.slice(0, 3); // Comportement par défaut
         titreSection = "Albums les plus streamés"
     }
 
     return (
         <div className='sectionAlbums'>
+            <SearchBar 
+                list={albums} 
+                setList={setFilteredAlbums} 
+                filterField={album => album.post_title || ""} // S'assurer que filterField retourne une chaîne
+                placeholder='album'
+            />
             <h1>{titreSection}</h1>
 
             <div ref={albumsRef} id='albums' className='albums'>
@@ -81,12 +91,12 @@ function ListeAlbums() {
                                 groupeInfos="album"
                                 idInfo={album.ID}
                                 linkToObject={`album/${album.ID}`}
-                                imageUrl={albums[index].acf.jaquette_de_lalbum.sizes.thumbnail}
+                                imageUrl={album?.acf?.jaquette_de_lalbum?.sizes?.thumbnail || 'default_image_url'}
                                 altImage='yohoho'
                                 mainInfo={album.post_title}
                             />
                         </Link>
-                        <h4 className="nomArtiste">{albums[index].acf.artiste_principal[0].post_title}</h4>
+                        <h4 className="nomArtiste">{album?.acf?.artiste_principal?.[0]?.post_title || 'Unknown Artist'}</h4>
                     </div>
                 )}
             </div>
