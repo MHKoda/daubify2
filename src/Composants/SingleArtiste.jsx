@@ -41,10 +41,13 @@ function SingleArtiste() {
   }
 
   return (
-    <div>
-      <img src={artiste.acf.photo_de_lartiste.sizes.thumbnail} alt={`Photo de(s) `+ artiste.post_title} />
-      <h1>{artiste.post_title}</h1>
-      <p>{artiste.acf.biographie}</p>
+    <div className='containerDetails'>
+      <div className='artisteDetails'>
+      <img className='backgroundImg' src={artiste.acf.photo_de_lartiste.sizes.medium_large} alt={`Photo de(s) ` + artiste.post_title} />
+        <img src={artiste.acf.photo_de_lartiste.sizes.thumbnail} alt={`Photo de(s) ` + artiste.post_title} />
+        <h1>{artiste.post_title}</h1>
+        <p className='biographie'>{artiste.acf.biographie}</p>
+      </div>
     </div>
   );
 }
